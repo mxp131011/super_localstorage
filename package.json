@@ -1,6 +1,6 @@
 {
     "name": "super-localstorage",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "description": "super-localstorage 是 利用window.localStorage进行储存的插件可以加密储存【^运算符操作加密，可自定义密匙】，且可存取【Array ，Object， Boolean， Number， String】等类型的数据无需做JSON.stringify()或JSON.parse()处理。",
     "keywords": [
         "node.js",
