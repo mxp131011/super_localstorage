@@ -58,7 +58,7 @@ export declare class SuperLocalStorage {
      *
      * @description time合法格式: [2021,10,11,23,59,59,1000], '2021-10-11', '2021/10/11', new Date()对象, 时间戳
      */
-    set(key: string, value: any, time: string | Date | number[] | number): void;
+    set(key: string, value: any, time?: string | Date | number[] | number): void;
 
     /**
      *  根据key得到解密后的存储对象
@@ -79,7 +79,7 @@ export declare class SuperLocalStorage {
      * @description time合法格式: [2021,10,11,23,59,59,1000], '2021-10-11', '2021/10/11', new Date()对象, 时间戳
      *
      */
-    setEncrypt(key: string, value: any, time: string | Date | number[] | number): void;
+    setEncrypt(key: string, value: any, time?: string | Date | number[] | number): void;
 
     /**
      * 删除某个localStorage 【注意】只能删除由本组件创建的localStorage
