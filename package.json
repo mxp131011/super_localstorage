@@ -1,38 +1,42 @@
 {
-    "name": "super-localstorage",
-    "version": "2.0.2",
-    "description": "super-localstorage 是 利用window.localStorage进行储存的插件可以加密储存【^运算符操作加密，可自定义密匙】，且可存取【Array ，Object， Boolean， Number， String】等类型的数据无需做JSON.stringify()或JSON.parse()处理。",
-    "keywords": [
-        "node.js",
-        "javascript",
-        "vue",
-        "localstorage",
-        "storage",
-        "存储",
-        "本地存储"
-    ],
-    "main": "index.js",
-    "types": "./index.d.ts",
-    "scripts": {
-        "登录": "npm login",
-        "更新一个补丁": "npm version patch",
-        "更新一个小改动": "npm version minor",
-        "更新一个大改动": "npm version major",
-        "发布": "npm publish"
-    },
-    "bugs": {
-        "email": "mxp131011@qq.com",
-        "url": "https://gitee.com/mxp_open/super-localstorage/issues"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://gitee.com/mxp_open/super-localstorage"
-    },
-    "author": {
-        "name": "O昵称重要吗O",
-        "email": "mxp131011@qq.com",
-        "url": "https://gitee.com/mxp131011"
-    },
-    "license": "MIT",
-    "homepage": "https://gitee.com/mxp_open/super-localstorage"
+  "name": "super-localstorage",
+  "version": "2.0.2",
+  "description": "super-localstorage 是 利用window.localStorage进行储存的插件可以加密储存【^运算符操作加密，可自定义密匙】，且可存取【Array ，Object， Boolean， Number， String】等类型的数据无需做JSON.stringify()或JSON.parse()处理。",
+  "keywords": [
+    "node.js",
+    "javascript",
+    "vue",
+    "localstorage",
+    "storage",
+    "存储",
+    "本地存储"
+  ],
+  "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "typescript": "latest"
+  },
+  "scripts": {
+    "打包": "tsc -d",
+    "登录": "npm login",
+    "更新一个补丁": "npm version patch",
+    "更新一个小改动": "npm version minor",
+    "更新一个大改动": "npm version major",
+    "发布": "npm publish"
+  },
+  "bugs": {
+    "email": "mxp131011@qq.com",
+    "url": "https://gitee.com/mxp_open/super-localstorage/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/mxp_open/super-localstorage"
+  },
+  "author": {
+    "name": "O昵称重要吗O",
+    "email": "mxp131011@qq.com",
+    "url": "https://gitee.com/mxp131011"
+  },
+  "license": "MIT",
+  "homepage": "https://gitee.com/mxp_open/super-localstorage"
 }
