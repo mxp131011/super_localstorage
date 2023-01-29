@@ -17,7 +17,7 @@
     "typescript": "latest"
   },
   "scripts": {
-    "打包": "tsc -d",
+    "打包": "rimraf dist && tsc",
     "登录": "npm login",
     "更新一个补丁": "npm version patch",
     "更新一个小改动": "npm version minor",
