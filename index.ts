@@ -1,4 +1,4 @@
-type $ValueType = string | number | boolean | unknown[] | Record<string | number, unknown>;
+type $ValueType = Record<number | string, unknown> | unknown[] | boolean | number | string;
 
 export default class SuperLocalStorage {
   /**
@@ -35,6 +35,7 @@ export default class SuperLocalStorage {
 
   /**
    * 设置自定义分组的组名
+   *
    * @param {string} groupName - 自定义分组的组名
    */
   public setGroupName(groupName: string) {
@@ -43,6 +44,7 @@ export default class SuperLocalStorage {
 
   /**
    * 设置加密的密钥
+   *
    * @param {string} secretKey - 加密的密钥
    */
   public setSecretKey(secretKey: string) {
@@ -50,7 +52,20 @@ export default class SuperLocalStorage {
   }
 
   /**
-   * 根据key得到存储的值 (如果没有则返回null)
+   * 存储对象 (非加密)
+   *
+   * @param {string} key - 存储的key
+   * @param { string | number | boolean | object } value - 存储的值
+   * @param {Date | number} [time] - 过期的日期对象 或者 时间戳 (不传代表永久有效)
+   */
+  public set(key: string, value: $ValueType, time?: Date | number) {
+    const obj = this._getSetValue(value, time) || '';
+    window.localStorage.setItem(this._getStorageKey(key), JSON.stringify(obj));
+  }
+
+  /**
+   * 得到存储的对象 (非加密)
+   *
    * @param {string} key - 存储的key
    * @returns {string | number | boolean | object | null} 存储的值
    */
@@ -68,18 +83,22 @@ export default class SuperLocalStorage {
   }
 
   /**
-   * 存储对象 【可设置过期日期】
+   * 存储对象 (加密)
+   *
    * @param {string} key - 存储的key
    * @param { string | number | boolean | object } value - 存储的值
    * @param {Date | number} [time] - 过期的日期对象 或者 时间戳 (不传代表永久有效)
+   * @description time合法格式: [2021,10,11,23,59,59,1000], '2021-10-11', '2021/10/11', new Date()对象, 时间戳
    */
-  public set(key: string, value: $ValueType, time?: Date | number) {
-    const obj = this._getSetValue(value, time) || '';
-    window.localStorage.setItem(this._getStorageKey(key), JSON.stringify(obj));
+  public setEncrypt(key: string, value: $ValueType, time?: Date | number) {
+    const newKey = this._getStorageKey(key);
+    const obj = this._getSetValue(value, time);
+    window.localStorage.setItem(newKey, this.secret(this.secretKey, JSON.stringify(obj)));
   }
 
   /**
-   * 根据key得到解密后的存储对象
+   * 得到存储的对象 (加密)
+   *
    * @param {string} key - 存储的key
    * @returns { string | number | boolean | object | null} 存储的值
    */
@@ -103,20 +122,8 @@ export default class SuperLocalStorage {
   }
 
   /**
-   * 存储加密的对象 【可设置过期日期】
-   * @param {string} key - 存储的key
-   * @param { string | number | boolean | object } value - 存储的值
-   * @param {Date | number} [time] - 过期的日期对象 或者 时间戳 (不传代表永久有效)
-   * @description time合法格式: [2021,10,11,23,59,59,1000], '2021-10-11', '2021/10/11', new Date()对象, 时间戳
-   */
-  public setEncrypt(key: string, value: $ValueType, time?: Date | number) {
-    const newKey = this._getStorageKey(key);
-    const obj = this._getSetValue(value, time);
-    window.localStorage.setItem(newKey, this.secret(this.secretKey, JSON.stringify(obj)));
-  }
-
-  /**
    * 删除某个localStorage 【注意】只能删除由本组件创建的localStorage
+   *
    * @param {string} key - 存储的key
    */
   public del(key: string): void {
@@ -125,6 +132,7 @@ export default class SuperLocalStorage {
 
   /**
    * 删除某个自定义分组下的所有localStorage
+   *
    * @param {string} groupName - 自定义分组的名称
    */
   public delAGroup(groupName?: string): void {
@@ -156,6 +164,7 @@ export default class SuperLocalStorage {
 
   /**
    * 得到最终的key
+   *
    * @param {string} key - 需要操作的key
    * @returns {string} 最终的key
    */
@@ -165,6 +174,7 @@ export default class SuperLocalStorage {
 
   /**
    * 得到真实存储的值(如设置了过期时间且已过期则返回null)
+   *
    * @param {object} resultObj - 包含过期时间的的封装后的存储对象
    * @param {unknown} resultObj.result - 真实存储的值
    * @param {number} resultObj.outDate - 过期时间
@@ -182,6 +192,7 @@ export default class SuperLocalStorage {
 
   /**
    * 得到经过封装后的存储对象（转化成字符串）
+   *
    * @param {unknown} value - 需要储存的值
    * @param { Date | number} [time] - 可以被转化的日期对象
    * @returns { { result: unknown; outDate?: number } } 经过封装后的存储对象
@@ -199,11 +210,12 @@ export default class SuperLocalStorage {
 
   /**
    * 删除某个分组下的所有存储值
+   *
    * @param {string} group - 分组的组名
    */
   private _delScopeAll(group: string): void {
     if (group && typeof group === 'string') {
-      for (var key in window.localStorage) {
+      for (const key in window.localStorage) {
         if (key.indexOf(group) === 0) {
           window.localStorage.removeItem(key);
         }
@@ -213,6 +225,7 @@ export default class SuperLocalStorage {
 
   /**
    * 格式化成Date对象
+   *
    * @param {Date | number} date - 日期对象 或 时间戳
    * @example
    *   _formatDate(new Date()) 日期对象
@@ -234,6 +247,7 @@ export default class SuperLocalStorage {
 
   /**
    * 根据按位运算进行加密或解密 (第一次调用为加密第二次调用为解密)
+   *
    * @param {string} key - 解密的key
    * @param {string} text - 需要加密或解密的字符串
    * @returns {string } 加密或解密后的字符串
