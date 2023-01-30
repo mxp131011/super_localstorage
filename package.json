@@ -11,7 +11,7 @@
     "存储",
     "本地存储"
   ],
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "devDependencies": {
     "typescript": "latest"
@@ -22,7 +22,8 @@
     "更新一个补丁": "npm version patch",
     "更新一个小改动": "npm version minor",
     "更新一个大改动": "npm version major",
-    "发布": "npm publish"
+    "发布": "npm publish",
+    "更新并发布": "npm version patch && npm publish"
   },
   "bugs": {
     "email": "mxp131011@qq.com",

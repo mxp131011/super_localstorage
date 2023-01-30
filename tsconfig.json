@@ -13,6 +13,7 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
     "useDefineForClassFields": true,
+    "suppressImplicitAnyIndexErrors": true,
     "strict": true, // 启用所有严格类型检查选项
     "noImplicitAny": true, // 在表达式和声明上有隐含的 any类型时报错
     "strictNullChecks": true, // 当类型检查时,要考虑' null '和' undefined '。
