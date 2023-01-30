@@ -1,3 +1,5 @@
+type $ValueType = string | number | boolean | unknown[] | Record<string | number, unknown>;
+
 export default class SuperLocalStorage {
   /**
    * 全局的命名空间（用于删除所有本插件创建的LocalStorage）
@@ -50,9 +52,9 @@ export default class SuperLocalStorage {
   /**
    * 根据key得到存储的值 (如果没有则返回null)
    * @param {string} key - 存储的key
-   * @returns {unknown} 存储的值
+   * @returns {string | number | boolean | object | null} 存储的值
    */
-  public get(key: string): unknown {
+  public get(key: string): $ValueType | null {
     const resultObj = window.localStorage.getItem(this._getStorageKey(key));
     try {
       if (resultObj) {
@@ -68,10 +70,10 @@ export default class SuperLocalStorage {
   /**
    * 存储对象 【可设置过期日期】
    * @param {string} key - 存储的key
-   * @param {unknown} value - 存储的值
+   * @param { string | number | boolean | object } value - 存储的值
    * @param {Date | number} [time] - 过期的日期对象 或者 时间戳 (不传代表永久有效)
    */
-  public set(key: string, value: unknown, time?: Date | number) {
+  public set(key: string, value: $ValueType, time?: Date | number) {
     const obj = this._getSetValue(value, time) || '';
     window.localStorage.setItem(this._getStorageKey(key), JSON.stringify(obj));
   }
@@ -79,9 +81,9 @@ export default class SuperLocalStorage {
   /**
    * 根据key得到解密后的存储对象
    * @param {string} key - 存储的key
-   * @returns {unknown} 存储的值
+   * @returns { string | number | boolean | object | null} 存储的值
    */
-  public getEncrypt(key: string): unknown {
+  public getEncrypt(key: string): $ValueType | null {
     const newKey = this._getStorageKey(key);
     const resultObj = window.localStorage.getItem(newKey);
     try {
@@ -103,11 +105,11 @@ export default class SuperLocalStorage {
   /**
    * 存储加密的对象 【可设置过期日期】
    * @param {string} key - 存储的key
-   * @param {unknown} value - 存储的值
+   * @param { string | number | boolean | object } value - 存储的值
    * @param {Date | number} [time] - 过期的日期对象 或者 时间戳 (不传代表永久有效)
    * @description time合法格式: [2021,10,11,23,59,59,1000], '2021-10-11', '2021/10/11', new Date()对象, 时间戳
    */
-  public setEncrypt(key: string, value: unknown, time?: Date | number) {
+  public setEncrypt(key: string, value: $ValueType, time?: Date | number) {
     const newKey = this._getStorageKey(key);
     const obj = this._getSetValue(value, time);
     window.localStorage.setItem(newKey, this.secret(this.secretKey, JSON.stringify(obj)));
@@ -168,14 +170,11 @@ export default class SuperLocalStorage {
    * @param {number} resultObj.outDate - 过期时间
    * @returns {unknown} 真实存储的值(如设置了过期时间且已过期则返回null)
    */
-  private _getTrimStorage(resultObj: { result: unknown; outDate: number }): unknown {
+  private _getTrimStorage(resultObj: { result: unknown; outDate: number }): $ValueType | null {
     try {
       const { result, outDate } = resultObj;
-      if (outDate) {
-        return new Date().getTime() <= outDate ? result : null;
-      } else {
-        return result;
-      }
+      const newResult = outDate ? (new Date().getTime() <= outDate ? result : null) : result;
+      return ['boolean', 'number', 'string', 'object'].includes(typeof newResult) ? (newResult as $ValueType) : null;
     } catch (error) {
       return null;
     }
