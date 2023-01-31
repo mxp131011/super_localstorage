@@ -11,13 +11,23 @@
     "存储",
     "本地存储"
   ],
-  "main": "./dist/index.js",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    "require": "./dist/index.cjs",
+    "import": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
-    "typescript": "latest"
+    "typescript": "latest",
+    "tsup": "latest"
   },
   "scripts": {
-    "打包": "rimraf dist && tsc",
+    "打包": "tsup",
     "登录": "npm login",
     "更新一个补丁": "npm version patch",
     "更新一个小改动": "npm version minor",
